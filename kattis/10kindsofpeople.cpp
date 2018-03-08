@@ -4,7 +4,7 @@
 using namespace std;
 using ll = long long;
 
-constexpr ll MAX_N = 1005;
+constexpr ll MAX_N = 1000;
 
 bool map[MAX_N][MAX_N];
 int uf[MAX_N * MAX_N];
@@ -44,7 +44,7 @@ inline void build_uf() {
         }
     }
 
-    for (ll i = 0; i < (r * 1000) + c; i++) {
+    for (ll i = 0; i < ((r - 1) * 1000) + c; i++) {
         uf[i] = i;
     }
 
