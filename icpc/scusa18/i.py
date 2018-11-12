@@ -1,18 +1,17 @@
 n = int(raw_input())
 
-dice = {}
-
+dice = {}    
 
 def twist(t, bo, f, ba, l, r):
-	f, r, ba, l = r, ba, l, f
-	return t, bo, f, ba, l, r
+        f, r, ba, l = r, ba, l, f
+        return t, bo, f, ba, l, r
 
 def turn(t, bo, f, ba, l, r):
 	t, bo, l, r = r, l, t, bo 
 	return t, bo, f, ba, l, r
 
 def flip(t, bo, f, ba, l, r):
-	t, bo,  l, r = bo, t,  r, l
+        t, bo,  l, r = bo, t,  r, l
 	return t, bo, f, ba, l, r
 
 max_c = [0]

@@ -1,57 +1,60 @@
 from collections import defaultdict
-lang_outs = defaultdict(set)
-person_lang = {}
-graph = defaultdict(set)
-numname = []
-namenum = {}
-n = int(input().strip())
-for _ in range(n):
-    lang = input().strip().split(' ')
-    person_lang[lang[0]] = lang[1]
-    for i in range(len(lang) - 2):
-        lang_outs[lang[i + 2]].add(lang[0])
-    lang_outs[lang[1]].add(lang[0])
-for key,val in person_lang.items():
-    graph[key].update(lang_outs[val])
-    numname.append(key)
-    namenum[key] = len(numname) - 1
-val = [0] * n
-comp = [-1] * n
-time = 0
-ncomps = 0
-z = []
-cont = []
-print(graph)
-def dfs(j, g):
-    global time, ncomps, z, cont, val, comp
-    time += 1
-    low = time
-    val[j] = time
-    z.append(j)
-    for e in graph[numname[j]]:
-        e = namenum[e]
-        if comp[e] < 0:
-            if val[e] == 0:
-                low = min(low, dfs(e, g))
-    if low == val[j]:
-        x = z.pop()
-        comp[x] = ncomps
-        cont.append(x)
-        while(x != j):
-            x = z.pop()
-            comp[x] = ncomps
-            cont.append(x)
-        cont = []
-        ncomps += 1
-    val[j] = low
-    return low
 
+visited = set()
+stack = []
+count = 0
 
+def dfs(name, graph):
+    global stack, visited
+    if name in visited:
+        return
+    visited.add(name)
+    for node in graph[name]:
+        dfs(node, graph)
+    stack.append(name)
 
-for i in range(n):
-    if comp[i] < 0:
-        dfs(i, graph);
-print(val)
-print(comp)
-print(ncomps)
+def count_dfs(name, t_graph):
+    global visited, count
+    if name in visited:
+        return
+    visited.add(name)
+    count += 1
+    for node in t_graph[name]:
+        count_dfs(node, t_graph)
 
+def solve():
+    global stack, visited, count
+    n = int(input())
+    graph = defaultdict(list)
+    t_graph = defaultdict(list)
+    languages = defaultdict(list)
+    names = []
+    for _ in range(n):
+        l = input().split()
+        name = l[0]
+        language = l[1]
+        languages[language].append(name)
+        names.append((name, language))
+        for lang in l[2:]:
+            languages[lang].append(name)
+    for name, language in names:
+        for person in languages[language]:
+            if person == name:
+                continue
+            graph[name].append(person)
+            t_graph[person].append(name)
+
+    for name, _ in names:
+        dfs(name, graph)
+
+    visited = set()
+    max_count = 0
+    while len(stack) > 0:
+        name = stack.pop()
+        count_dfs(name, t_graph)
+        max_count = max(max_count, count)
+        count = 0
+    print(n - max_count)
+    
+
+solve()
